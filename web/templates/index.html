@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SignBridge AI</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(circle at top left, #182b55, transparent 40%),
+                radial-gradient(circle at bottom right, #3b155f, transparent 40%),
+                #070b18;
+
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* ================= HEADER ================= */
+
+        header {
+            height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 6%;
+
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+
+            background: rgba(5,8,20,0.65);
+            backdrop-filter: blur(15px);
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #61dafb;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            font-size: 14px;
+            color: #a8b2c8;
+        }
+
+        .dot {
+            width: 9px;
+            height: 9px;
+            background: #35e68a;
+            border-radius: 50%;
+
+            box-shadow: 0 0 12px #35e68a;
+        }
+
+
+        /* ================= MAIN ================= */
+
+        main {
+            width: 90%;
+            max-width: 1250px;
+
+            margin: 35px auto;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .hero h1 span {
+            color: #61dafb;
+        }
+
+        .hero p {
+            color: #9ca8c0;
+            font-size: 16px;
+        }
+
+
+        /* ================= TRANSLATOR ================= */
+
+        .translator {
+            display: grid;
+
+            grid-template-columns: 1fr 1.2fr;
+
+            gap: 25px;
+        }
+
+
+        /* ================= INPUT PANEL ================= */
+
+        .panel {
+            background: rgba(18,25,48,0.78);
+
+            border: 1px solid rgba(255,255,255,0.1);
+
+            border-radius: 22px;
+
+            padding: 25px;
+
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+
+            backdrop-filter: blur(15px);
+        }
+
+        .panel-title {
+            font-size: 19px;
+            font-weight: bold;
+
+            margin-bottom: 18px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 170px;
+
+            resize: none;
+
+            border-radius: 15px;
+
+            border: 1px solid rgba(255,255,255,0.1);
+
+            background: rgba(5,9,22,0.8);
+
+            color: white;
+
+            padding: 18px;
+
+            font-size: 17px;
+
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: #61dafb;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+
+            margin-top: 15px;
+        }
+
+        button {
+            flex: 1;
+
+            border: none;
+
+            padding: 13px;
+
+            border-radius: 12px;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            background: #18243f;
+
+            color: white;
+
+            transition: 0.25s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+
+            background: #26385f;
+        }
+
+        .primary {
+            background: #3478f6;
+        }
+
+        .primary:hover {
+            background: #4a88ff;
+        }
+
+        .mic {
+            background: #7c4dff;
+        }
+
+        .mic:hover {
+            background: #8e63ff;
+        }
+
+
+        /* ================= OUTPUT ================= */
+
+        .message {
+            margin-top: 20px;
+
+            padding: 15px;
+
+            background: rgba(0,0,0,0.25);
+
+            border-radius: 12px;
+
+            color: #c8d2e8;
+        }
+
+        .message strong {
+            color: #61dafb;
+        }
+
+
+        /* ================= AVATAR PANEL ================= */
+
+        .avatar-panel {
+            position: relative;
+
+            min-height: 520px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: center;
+
+            overflow: hidden;
+        }
+
+        .avatar-title {
+            position: absolute;
+
+            top: 22px;
+            left: 25px;
+
+            font-weight: bold;
+        }
+
+        .sign-status {
+            position: absolute;
+
+            top: 22px;
+            right: 25px;
+
+            color: #61dafb;
+
+            font-size: 13px;
+        }
+
+
+        /* ================= HUMAN AVATAR ================= */
+
+        .avatar {
+            position: relative;
+
+            width: 330px;
+            height: 390px;
+
+            margin-top: 35px;
+        }
+
+
+        /* HEAD */
+
+        .head {
+            position: absolute;
+
+            width: 115px;
+            height: 130px;
+
+            border-radius: 48%;
+
+            background: #d99b76;
+
+            top: 15px;
+            left: 108px;
+
+            z-index: 4;
+        }
+
+
+        /* HAIR */
+
+        .hair {
+            position: absolute;
+
+            width: 120px;
+            height: 60px;
+
+            background: #202638;
+
+            border-radius: 60px 60px 20px 20px;
+
+            top: 5px;
+            left: 105px;
+
+            z-index: 5;
+        }
+
+
+        /* EYES */
+
+        .eye {
+            position: absolute;
+
+            width: 9px;
+            height: 9px;
+
+            background: #172033;
+
+            border-radius: 50%;
+
+            top: 70px;
+        }
+
+        .eye.left {
+            left: 32px;
+        }
+
+        .eye.right {
+            right: 32px;
+        }
+
+
+        /* BODY */
+
+        .body {
+            position: absolute;
+
+            width: 170px;
+            height: 170px;
+
+            background: #3478f6;
+
+            border-radius: 55px 55px 20px 20px;
+
+            top: 135px;
+            left: 80px;
+
+            z-index: 2;
+        }
+
+
+        /* LEFT ARM */
+
+        .arm-left {
+            position: absolute;
+
+            width: 35px;
+            height: 160px;
+
+            background: #3478f6;
+
+            border-radius: 30px;
+
+            top: 145px;
+            left: 48px;
+
+            transform-origin: top center;
+
+            z-index: 1;
+        }
+
+
+        /* RIGHT ARM */
+
+        .arm-right {
+            position: absolute;
+
+            width: 35px;
+            height: 160px;
+
+            background: #3478f6;
+
+            border-radius: 30px;
+
+            top: 145px;
+            right: 48px;
+
+            transform-origin: top center;
+
+            z-index: 1;
+        }
+
+
+        /* HANDS */
+
+        .hand {
+            position: absolute;
+
+            width: 48px;
+            height: 48px;
+
+            border-radius: 50%;
+
+            background: #d99b76;
+
+            z-index: 6;
+
+            transition: 0.5s;
+        }
+
+        .hand-left {
+            left: 42px;
+            top: 285px;
+        }
+
+        .hand-right {
+            right: 42px;
+            top: 285px;
+        }
+
+
+        /* LEGS */
+
+        .leg {
+            position: absolute;
+
+            width: 45px;
+            height: 100px;
+
+            background: #252d43;
+
+            top: 290px;
+
+            border-radius: 15px;
+
+            z-index: 0;
+        }
+
+        .leg.left {
+            left: 105px;
+        }
+
+        .leg.right {
+            right: 105px;
+        }
+
+
+        /* ================= ANIMATIONS ================= */
+
+        /* HELLO */
+
+        .avatar.hello .arm-right {
+            animation: helloWave 0.55s ease-in-out infinite alternate;
+        }
+
+        .avatar.hello .hand-right {
+            animation: handWave 0.55s ease-in-out infinite alternate;
+        }
+
+
+        @keyframes helloWave {
+
+            from {
+                transform: rotate(-15deg);
+            }
+
+            to {
+                transform: rotate(-65deg);
+            }
+
+        }
+
+        @keyframes handWave {
+
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-35px);
+            }
+
+        }
+
+
+        /* THANK YOU */
+
+        .avatar.thankyou .arm-right {
+            animation: thankYouArm 1.2s ease-in-out infinite;
+        }
+
+        @keyframes thankYouArm {
+
+            0% {
+                transform: rotate(-20deg);
+            }
+
+            50% {
+                transform: rotate(-55deg);
+            }
+
+            100% {
+                transform: rotate(-20deg);
+            }
+
+        }
+
+
+        /* GOOD JOB */
+
+        .avatar.goodjob .arm-left,
+        .avatar.goodjob .arm-right {
+
+            animation: goodJob 0.8s ease-in-out infinite alternate;
+        }
+
+        @keyframes goodJob {
+
+            from {
+                transform: rotate(-15deg);
+            }
+
+            to {
+                transform: rotate(15deg);
+            }
+
+        }
+
+
+        /* CALL ME */
+
+        .avatar.callme .hand-right {
+
+            animation: callAnimation 1s ease-in-out infinite;
+        }
+
+        @keyframes callAnimation {
+
+            0% {
+                transform: rotate(0deg);
+            }
+
+            50% {
+                transform: rotate(25deg) translateY(-15px);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
+
+        }
+
+
+        /* AGREE */
+
+        .avatar.agree .hand-left,
+        .avatar.agree .hand-right {
+
+            animation: agreeAnimation 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes agreeAnimation {
+
+            from {
+                transform: translateY(0);
+            }
+
+            to {
+                transform: translateY(-20px);
+            }
+
+        }
+
+
+        /* PLEASE WAIT */
+
+        .avatar.pleasewait .arm-right {
+
+            animation: waitAnimation 1.5s ease-in-out infinite;
+        }
+
+        @keyframes waitAnimation {
+
+            0% {
+                transform: rotate(-10deg);
+            }
+
+            50% {
+                transform: rotate(-45deg);
+            }
+
+            100% {
+                transform: rotate(-10deg);
+            }
+
+        }
+
+
+        /* ================= SIGN LABEL ================= */
+
+        .current-sign {
+
+            margin-top: 5px;
+
+            font-size: 25px;
+
+            font-weight: bold;
+
+            color: white;
+        }
+
+        .animation-label {
+
+            margin-top: 7px;
+
+            color: #8f9bb5;
+
+            font-size: 14px;
+        }
+
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width: 850px) {
+
+            .translator {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        Sign<span>Bridge</span> AI
+    </div>
+
+    <div class="status">
+
+        <div class="dot"></div>
+
+        Translator Ready
+
+    </div>
+
+</header>
+
+
+<main>
+
+
+    <section class="hero">
+
+        <h1>
+            Communication Without <span>Barriers</span>
+        </h1>
+
+        <p>
+            Translate text and voice into human sign-language animation.
+        </p>
+
+    </section>
+
+
+    <section class="translator">
+
+
+        <!-- ================= INPUT ================= -->
+
+        <div class="panel">
+
+            <div class="panel-title">
+                💬 Text / Voice Input
+            </div>
+
+
+            <textarea
+                id="inputText"
+                placeholder="Type something like: Hello, thank you..."
+            ></textarea>
+
+
+            <div class="buttons">
+
+                <button
+                    class="primary"
+                    onclick="translateText()">
+
+                    Translate
+
+                </button>
+
+
+                <button
+                    class="mic"
+                    onclick="startVoice()">
+
+                    🎤 Speak
+
+                </button>
+
+            </div>
+
+
+            <div class="message">
+
+                <strong>Your message:</strong>
+
+                <div id="message">
+                    Waiting for input...
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ================= AVATAR ================= -->
+
+        <div class="panel avatar-panel">
+
+
+            <div class="avatar-title">
+                👤 Sign Language Translator
+            </div>
+
+
+            <div
+                class="sign-status"
+                id="status">
+
+                Ready
+
+            </div>
+
+
+            <div
+                class="avatar"
+                id="avatar">
+
+
+                <div class="hair"></div>
+
+                <div class="head">
+
+                    <div class="eye left"></div>
+
+                    <div class="eye right"></div>
+
+                </div>
+
+
+                <div class="body"></div>
+
+
+                <div class="arm-left"></div>
+
+                <div class="arm-right"></div>
+
+
+                <div class="hand hand-left"></div>
+
+                <div class="hand hand-right"></div>
+
+
+                <div class="leg left"></div>
+
+                <div class="leg right"></div>
+
+
+            </div>
+
+
+            <div
+                class="current-sign"
+                id="currentSign">
+
+                Ready
+
+            </div>
+
+
+            <div
+                class="animation-label"
+                id="animationLabel">
+
+                Enter text to begin translation
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+<script>
+
+
+/* =====================================================
+   SIGN DICTIONARY
+   ===================================================== */
+
+const signDictionary = {
+
+    "hello": "hello",
+
+    "hi": "hello",
+
+    "thank you": "thankyou",
+
+    "thanks": "thankyou",
+
+    "good job": "goodjob",
+
+    "all the best": "goodjob",
+
+    "call me": "callme",
+
+    "i agree": "agree",
+
+    "agree": "agree",
+
+    "please wait": "pleasewait"
+
+};
+
+
+/* =====================================================
+   TRANSLATE TEXT
+   ===================================================== */
+
+function translateText() {
+
+    const input =
+        document
+        .getElementById("inputText")
+        .value
+        .toLowerCase()
+        .trim();
+
+
+    if (!input) {
+
+        return;
+
+    }
+
+
+    document
+        .getElementById("message")
+        .innerText = input;
+
+
+    const signs = findSigns(input);
+
+
+    if (signs.length === 0) {
+
+        document
+            .getElementById("status")
+            .innerText = "No sign found";
+
+        document
+            .getElementById("currentSign")
+            .innerText = "Not available";
+
+        document
+            .getElementById("animationLabel")
+            .innerText =
+                "This phrase is not supported yet.";
+
+        return;
+
+    }
+
+
+    playSignSequence(signs);
+
+}
+
+
+/* =====================================================
+   FIND SIGN SEQUENCE
+   ===================================================== */
+
+function findSigns(sentence) {
+
+    let remaining = sentence;
+
+    let result = [];
+
+
+    const phrases =
+        Object.keys(signDictionary)
+        .sort((a,b) => b.length - a.length);
+
+
+    for (const phrase of phrases) {
+
+        while (remaining.includes(phrase)) {
+
+            result.push(
+                signDictionary[phrase]
+            );
+
+
+            remaining =
+                remaining.replace(
+                    phrase,
+                    ""
+                );
+
+        }
+
+    }
+
+
+    return result;
+
+}
+
+
+/* =====================================================
+   PLAY SIGN SEQUENCE
+   ===================================================== */
+
+async function playSignSequence(signs) {
+
+
+    const avatar =
+        document.getElementById("avatar");
+
+
+    for (const sign of signs) {
+
+
+        avatar.className =
+            "avatar " + sign;
+
+
+        document
+            .getElementById("status")
+            .innerText =
+                "Signing...";
+
+
+        document
+            .getElementById("currentSign")
+            .innerText =
+                readableSign(sign);
+
+
+        document
+            .getElementById("animationLabel")
+            .innerText =
+                "Human avatar performing sign";
+
+
+        await sleep(2500);
+
+    }
+
+
+    avatar.className = "avatar";
+
+
+    document
+        .getElementById("status")
+        .innerText =
+            "Translation complete";
+
+
+}
+
+
+/* =====================================================
+   READABLE SIGN NAME
+   ===================================================== */
+
+function readableSign(sign) {
+
+    const names = {
+
+        hello: "HELLO",
+
+        thankyou: "THANK YOU",
+
+        goodjob: "GOOD JOB",
+
+        callme: "CALL ME",
+
+        agree: "I AGREE",
+
+        pleasewait: "PLEASE WAIT"
+
+    };
+
+
+    return names[sign] || sign.toUpperCase();
+
+}
+
+
+/* =====================================================
+   VOICE INPUT
+   ===================================================== */
+
+function startVoice() {
+
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+
+    if (!SpeechRecognition) {
+
+        alert(
+            "Speech recognition is not supported in this browser."
+        );
+
+        return;
+
+    }
+
+
+    const recognition =
+        new SpeechRecognition();
+
+
+    recognition.lang = "en-US";
+
+
+    recognition.interimResults = false;
+
+
+    document
+        .getElementById("status")
+        .innerText =
+            "Listening...";
+
+
+    recognition.start();
+
+
+    recognition.onresult = function(event) {
+
+
+        const text =
+            event
+            .results[0][0]
+            .transcript;
+
+
+        document
+            .getElementById("inputText")
+            .value = text;
+
+
+        translateText();
+
+    };
+
+
+    recognition.onerror = function() {
+
+        document
+            .getElementById("status")
+            .innerText =
+                "Voice input failed";
+
+    };
+
+}
+
+
+/* =====================================================
+   DELAY
+   ===================================================== */
+
+function sleep(ms) {
+
+    return new Promise(
+        resolve => setTimeout(resolve, ms)
+    );
+
+}
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+*.pyc
+*.mp3
+.env
+import cv2.py
